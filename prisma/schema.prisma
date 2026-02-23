@@ -1,0 +1,190 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  password  String
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  account   Account[]
+}
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  providerType       String
+  providerId         String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, providerAccountId])
+}
+
+model OtpCode {
+  id  Int    @id @default(autoincrement())
+  otp String
+}
+
+model Home {
+  id          Int      @id @default(autoincrement())
+  images      String[]
+  client      String
+  project     String
+  image_1     String
+  image_2     String
+  image_3     String
+  location    String
+  instagram   String
+  x           String
+  whatsapp    String
+  linkedin    String
+  mail        String
+  aim         Json
+  quote       Json
+  author      Json
+  quote_image String
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model BuildCategory {
+  id    Int     @id @default(autoincrement())
+  name  Json
+  Build Build[]
+}
+
+model Build {
+  id              Int           @id @default(autoincrement())
+  thumbnail       String
+  images          String[]
+  title           Json
+  location        Json?
+  linkedin        String?
+  scope           Json?
+  year            String?
+  status          Json?
+  team            Json?
+  briefing        Json?
+  briefing_image  String?
+  category        BuildCategory @relation(fields: [buildCategoryId], references: [id])
+  buildCategoryId Int
+
+  architectural_solution       Json?
+  architectural_solution_image String?
+
+  Meta   Meta? @relation(fields: [metaId], references: [id])
+  metaId Int?
+}
+
+model Meta {
+  id          Int      @id @default(autoincrement())
+  title       Json
+  description Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  build       Build[]
+  design      Design[]
+  blog        Blog[]
+}
+
+model DesignCategory {
+  id     Int      @id @default(autoincrement())
+  name   Json
+  Design Design[]
+}
+
+model Design {
+  id                           Int      @id @default(autoincrement())
+  images                       String[]
+  thumbnail                    String
+  title                        Json
+  location                     Json?
+  scope                        Json?
+  year                         String?
+  status                       Json?
+  team                         Json?
+  briefing                     Json?
+  briefing_image               String?
+  architectural_solution       Json?
+  architectural_solution_image String?
+
+  category         DesignCategory @relation(fields: [designCategoryId], references: [id])
+  designCategoryId Int
+
+  Meta   Meta? @relation(fields: [metaId], references: [id])
+  metaId Int?
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       Json
+  thumbnail   String
+  slug        String   @unique
+  description Json
+  image       String?
+  content     Json
+  authorId    Int
+  author      Author   @relation(fields: [authorId], references: [id])
+  date        DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  architectural_solution       Json?
+  architectural_solution_image String?
+
+  relatedBlogs   Blog[] @relation("RelatedBlogs")
+  relatedToBlogs Blog[] @relation("RelatedBlogs")
+
+  BlogMeta   BlogMeta? @relation(fields: [blogMetaId], references: [id])
+  blogMetaId Int?
+  Meta       Meta?     @relation(fields: [metaId], references: [id])
+  metaId     Int?
+}
+
+model BlogMeta {
+  id          Int      @id @default(autoincrement())
+  title       Json
+  description Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  blog        Blog[]
+}
+
+model Author {
+  id        Int      @id @default(autoincrement())
+  name      Json
+  job_title Json
+  image     String?
+  blog      Blog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

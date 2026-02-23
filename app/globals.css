@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #fff;
+  color: #333;
+  font-family: var(--font-ibm);
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+[vaul-drawer-direction="bottom"]:after {
+  @apply !hidden;
+}
+
+.content_style h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.content_style h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.content_style h3 {
+  font-weight: 700;
+  font-size: 1.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.content_style h4 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.content_style h5 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.content_style h6 {
+  font-size: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.content_style p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.content_style ul,
+.content_style ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.content_style ol > li {
+  margin-bottom: 0.5rem;
+  list-style: decimal !important; /* Use decimal numbering for ordered lists */
+}
+
+.content_style ul > li {
+  margin-bottom: 0.5rem;
+  list-style: disc !important; /* Use disc bullet points for unordered lists */
+}
+
+.content_style li {
+  margin-bottom: 0.5rem;
+}
+
+.content_style a {
+  color: #3182ce;
+  text-decoration: underline;
+}
+
+.content_style pre {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.content_style code {
+  font-size: 0.9em;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.content_style em,
+.content_style i {
+  font-style: italic;
+}
+
+.content_style strong,
+.content_style b {
+  font-weight: bold;
+}
+
+.content_style del,
+.content_style s {
+  text-decoration: line-through;
+}
+
+.content_style blockquote {
+  margin-left: 1rem;
+  border-left: 2px solid #ccc;
+  padding-left: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.content_style table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.content_style th,
+.content_style td {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+}
+
+.content_style img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.textLayer {
+  display: none !important;
+}
