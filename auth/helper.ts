@@ -3,14 +3,14 @@ import { signIn as signInAuth, signOut as signOutAuth } from ".";
 
 const signIn = async (user: any) => {
   await signInAuth("credentials", {
-    redirectTo: "/dashboard",
+    redirectTo: "/en/dashboard",
     ...user,
   });
 };
 
 const signOut = async () => {
   await signOutAuth({
-    redirectTo: "/sign-in",
+    redirectTo: "/en/sign-in",
   });
 };
 
