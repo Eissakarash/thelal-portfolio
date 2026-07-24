@@ -1,23 +1,10 @@
-import prisma from "@/lib/prisma";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth, { NextAuthConfig } from "next-auth";
 import authConfig from "./credentials";
 
-// Only use PrismaAdapter in Node.js environment, not in Edge Runtime
-const getAdapter = () => {
-  // Check if we're in a Node.js environment
-  if (typeof window === "undefined" && process.env.NEXT_RUNTIME !== "edge") {
-    return PrismaAdapter(prisma);
-  }
-  return undefined; // Return undefined for Edge Runtime
-};
-
 const authOptions: NextAuthConfig = {
-  //!IMPORTANT: strategy for Auth.js
   session: {
     strategy: "jwt",
   },
-  debug: true,
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -36,11 +23,9 @@ const authOptions: NextAuthConfig = {
       return session;
     },
   },
-  // Conditionally use the adapter
-  adapter: getAdapter(),
   ...authConfig,
   pages: {
-    signIn: "/sign-in",
+    signIn: "/en/sign-in",
   },
 };
 
