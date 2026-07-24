@@ -8,21 +8,17 @@ import {
 import { locales } from "./i18n";
 import { localePrefix } from "./utils/navigation";
 
-// This middleware doesn't use the auth() wrapper
 export default async function middleware(request: NextRequest) {
   const { nextUrl } = request;
 
-  // Get session manually instead of using auth() wrapper
   const authCookie =
+    request.cookies.get("authjs.session-token")?.value ||
+    request.cookies.get("__Secure-authjs.session-token")?.value ||
     request.cookies.get("next-auth.session-token")?.value ||
     request.cookies.get("__Secure-next-auth.session-token")?.value;
 
   const isLogin = !!authCookie;
   const lang = nextUrl.pathname.split("/")[1];
-
-  // Create a new headers object
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-url-lang", lang);
 
   const handleI18nRouting = createIntlMiddleware({
     defaultLocale: "ar",
@@ -31,10 +27,8 @@ export default async function middleware(request: NextRequest) {
     alternateLinks: false,
   });
 
-  const baseUrl = nextUrl.pathname.replace("/en", "");
-
+  const baseUrl = nextUrl.pathname.replace(/^\/(en|ar)/, "") || "/";
   const isProtectedRoute = /^\/dashboard(?:\/|$)/.test(baseUrl);
-
   const isAuthRoute = authRoutes.includes(baseUrl);
 
   const response = handleI18nRouting(request);
@@ -42,14 +36,16 @@ export default async function middleware(request: NextRequest) {
   if (isAuthRoute) {
     if (isLogin) {
       return NextResponse.redirect(
-        new URL(DEFAULT_LOGIN_REDIRECT, nextUrl.origin)
+        new URL(`/en${DEFAULT_LOGIN_REDIRECT}`, nextUrl.origin)
       );
     }
     return response;
   }
 
   if (!isLogin && isProtectedRoute) {
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN_PAGE, nextUrl.origin));
+    return NextResponse.redirect(
+      new URL(`/en${DEFAULT_LOGIN_PAGE}`, nextUrl.origin)
+    );
   }
 
   return response;
