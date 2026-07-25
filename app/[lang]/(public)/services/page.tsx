@@ -80,7 +80,7 @@ export default function ServicesPage({
       >
         <div className="relative mx-auto max-w-6xl" dir={isArabic ? "rtl" : "ltr"}>
           <p className="mb-4 text-sm tracking-[0.18em] text-[#c88a5b]">
-            {isArabic ? "ذلال للهندسة المعمارية" : "THELAL ARCHITECTURE"}
+            {isArabic ? "ظِلال للهندسة المعمارية" : "THELAL ARCHITECTURE"}
           </p>
           <h1 className="max-w-2xl text-4xl font-semibold leading-tight md:text-6xl">
             {isArabic ? "خدمات تصنع مساحات لها معنى." : "Services that shape meaningful spaces."}
