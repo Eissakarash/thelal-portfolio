@@ -54,6 +54,11 @@ function SideBar({ values }: { values: any }) {
                 {t("build")}
               </SheetClose>
             </Link>
+            <Link href="/services">
+              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
+                {lang === "ar" ? "الخدمات" : "Services"}
+              </SheetClose>
+            </Link>
             <Link href="/our-blog">
               <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
                 {t("our-blog")}
