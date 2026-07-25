@@ -17,82 +17,38 @@ async function Header({ lang }: { lang: "ar" | "en" }) {
     return;
   })) as any;
 
+  const services = lang === "ar" ? "الخدمات" : "Services";
+
   return (
     <>
-      <div className="max-md:p-4 sticky z-10 bg-white top-0 md:grid grid-cols-3 max-md:grid-cols-2 max-md:gap-2 items-center w-full pt-5 hidden">
-        <Link href="/" className="text-5xl font-bold text-black me-auto">
-          <Image src={Logo} alt="logo" className="w-32 object-contain" />
-        </Link>
+      <header className="sticky top-0 z-30 hidden border-b border-white/10 bg-[#171817] text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] md:block">
+        <div className="mx-auto grid min-h-[88px] max-w-[1440px] grid-cols-[auto_1fr_auto] items-center gap-8 px-8 lg:px-12">
+          <Link href="/" className="shrink-0" aria-label="Thelal home">
+            <Image src={Logo} alt="ظِلال" className="w-28 object-contain brightness-0 invert" priority />
+          </Link>
 
-        <ul className="flex justify-center gap-3 text-sm max-md:order-3 group text-natural-dark cursor-pointer hover:text-natural-dark/20 duration-200">
-          <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-            <Link href="/">{t("home")}</Link>
-          </li>
-          <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-            <Link href="/design">{t("design")}</Link>
-          </li>
-          <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-            <Link href="/build">{t("build")}</Link>
-          </li>
-          <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-            <Link href="/services">
-              {lang === "ar" ? "الخدمات" : "Services"}
-            </Link>
-          </li>
-          <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-            <Link href="/our-blog">{t("our-blog")}</Link>
-          </li>
-          <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-            <Link href="/team">{t("team")}</Link>
-          </li>
+          <nav aria-label="Primary navigation" className="justify-self-center">
+            <ul className="flex items-center justify-center gap-5 text-sm font-medium text-white/80 lg:gap-7">
+              <li><Link className="transition hover:text-[#c88a5b]" href="/">{t("home")}</Link></li>
+              <li><Link className="transition hover:text-[#c88a5b]" href="/design">{t("design")}</Link></li>
+              <li><Link className="transition hover:text-[#c88a5b]" href="/build">{t("build")}</Link></li>
+              <li><Link className="transition hover:text-[#c88a5b]" href="/services">{services}</Link></li>
+              <li><Link className="transition hover:text-[#c88a5b]" href="/our-blog">{t("our-blog")}</Link></li>
+              <li><Link className="transition hover:text-[#c88a5b]" href="/team">{t("team")}</Link></li>
+              <li><Link className="rounded-sm border border-[#c88a5b] px-3 py-2 text-[#f2c49f] transition hover:bg-[#c88a5b] hover:text-[#171817]" href="/contact-us">{t("contact")}</Link></li>
+            </ul>
+          </nav>
 
-          <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-            <Link href="/contact-us"> {t("contact")}</Link>
-          </li>
-        </ul>
-
-        <div className="flex shrink-0 gap-3 text-natural group cursor-pointer hover:text-opacity-50 duration-200 ms-auto">
-          <a
-            target="_blank"
-            href={values?.instagram}
-            className="hover:text-opacity-100  hover:text-natural"
-          >
-            <InstagramIcon />
-          </a>
-          <a
-            target="_blank"
-            href={values?.linkedin}
-            className="hover:text-opacity-100  hover:text-natural"
-          >
-            <Linkedin />
-          </a>
-          <a
-            target="_blank"
-            href={values?.x}
-            className="hover:text-opacity-100  hover:text-natural"
-          >
-            <X className="fill-current size-5 mt-1" />
-          </a>
-
-          <a
-            target="_blank"
-            href={values?.whatsapp}
-            className="hover:text-opacity-100  hover:text-natural"
-          >
-            <Whatsapp className="fill-current  size-6" />
-          </a>
-
-          <a
-            target="_blank"
-            href={values?.mail}
-            className="hover:text-opacity-100  hover:text-natural"
-          >
-            <Mail />
-          </a>
-
-          <LocaleSwitcher />
+          <div className="flex items-center gap-3 text-white/70">
+            <a aria-label="Instagram" target="_blank" rel="noreferrer" href={values?.instagram} className="transition hover:text-[#c88a5b]"><InstagramIcon size={19} /></a>
+            <a aria-label="LinkedIn" target="_blank" rel="noreferrer" href={values?.linkedin} className="transition hover:text-[#c88a5b]"><Linkedin size={19} /></a>
+            <a aria-label="X" target="_blank" rel="noreferrer" href={values?.x} className="transition hover:text-[#c88a5b]"><X className="size-4 fill-current" /></a>
+            <a aria-label="WhatsApp" target="_blank" rel="noreferrer" href={values?.whatsapp} className="transition hover:text-[#c88a5b]"><Whatsapp className="size-5 fill-current" /></a>
+            <a aria-label="Email" href={values?.mail} className="transition hover:text-[#c88a5b]"><Mail size={19} /></a>
+            <span className="border-s border-white/15 ps-3"><LocaleSwitcher /></span>
+          </div>
         </div>
-      </div>
+      </header>
       <SideBar values={values} />
     </>
   );

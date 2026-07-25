@@ -3,13 +3,22 @@
 @tailwind utilities;
 
 body {
-  background-color: #fff;
-  color: #333;
+  background-color: #f7f6f3;
+  color: #1d211f;
   font-family: var(--font-ibm);
 }
 
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c88a5b;
+}
+
+::selection {
+  background: #c88a5b;
+  color: #171817;
 }
 
 [vaul-drawer-direction="bottom"]:after {

@@ -57,53 +57,30 @@ const teamPage = async ({
   params: { lang: "ar" | "en" };
 }) => {
   const t = await getTranslations("common");
-  let data = (await getAllAuthors()) as any;
-
-  // Fallback data if no data in database
-  if (!data || data.length === 0) {
-    data = [
-      {
-        id: 1,
-        name: { en: 'John Doe', ar: 'جون دو' },
-        job_title: { en: 'Architect', ar: 'مهندس معماري' },
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200'
-      },
-      {
-        id: 2,
-        name: { en: 'Jane Smith', ar: 'جين سميث' },
-        job_title: { en: 'Interior Designer', ar: 'مصمم داخلي' },
-        image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200'
-      },
-      {
-        id: 3,
-        name: { en: 'Mike Johnson', ar: 'مايك جونسون' },
-        job_title: { en: 'Project Manager', ar: 'مدير مشاريع' },
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200'
-      }
-    ];
-  }
+  const data = (await getAllAuthors()) as any;
   return (
-    <div className="min-h-screen">
-      <div className="flex flex-col gap-6 my-10 px-10 py-5 ">
-        <h2 className="md:text-[30px] text-[26px] font-bold uppercase ">
-          {t("our_team")}
-        </h2>
-        <div className="grid grid-cols-3 max-md:grid-cols-1  gap-10">
+    <div className="min-h-screen bg-[#f7f6f3] py-14 md:py-20">
+      <div className="mx-auto max-w-[1440px] px-6 md:px-12 lg:px-20">
+        <div className="mb-12 max-w-2xl">
+          <p className="mb-3 text-xs font-medium tracking-[0.2em] text-[#b9784d]">{lang === "ar" ? "الخبرات التي تصنع الفرق" : "THE PEOPLE BEHIND THE WORK"}</p>
+          <h1 className="text-4xl font-semibold text-[#1d211f] md:text-5xl">{t("our_team")}</h1>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data?.map((team: AuthorType) => (
-            <Link key={team.id} href={`/team/${team.id}`}>
+            <Link key={team.id} href={`/team/${team.id}`} className="group overflow-hidden bg-white shadow-[0_18px_45px_rgba(27,29,28,0.07)]">
               <Image
                 loading="lazy"
                 src={team.image}
                 alt={`Portrait of ${team.name}`}
                 width={100}
                 height={100}
-                className="w-full h-full object-cover aspect-square"
+                className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
               />
-              <div className="p-2">
-                <h2 className="self-stretch text-lg  text-zinc-800">
+              <div className="p-6">
+                <h2 className="self-stretch text-xl font-semibold text-[#1d211f]">
                   {team.name[lang]}
                 </h2>
-                <p className="text-zinc-500">{team.job_title[lang]}</p>
+                <p className="mt-1 text-sm text-[#b9784d]">{team.job_title[lang]}</p>
               </div>
             </Link>
           ))}

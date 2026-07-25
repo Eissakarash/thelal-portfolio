@@ -1,13 +1,9 @@
 "use client";
+
 import { Link } from "@/utils/navigation";
 import Image from "next/image";
-import React, { useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetClose,
-} from "@/ui/atoms/sheet";
+import React from "react";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/ui/atoms/sheet";
 import Logo from "@/images/logo.png";
 import { Button } from "@/ui/atoms";
 import { InstagramIcon, Linkedin, Mail, Menu } from "lucide-react";
@@ -19,103 +15,43 @@ import LocaleSwitcher from "@/ui/atoms/locale-switcher";
 function SideBar({ values }: { values: any }) {
   const t = useTranslations("common");
   const lang = useLocale();
+  const services = lang === "ar" ? "الخدمات" : "Services";
+  const links = [
+    ["/", t("home")], ["/design", t("design")], ["/build", t("build")], ["/services", services],
+    ["/our-blog", t("our-blog")], ["/team", t("team")], ["/contact-us", t("contact")],
+  ];
+
   return (
-    <div className="md:hidden top-0 z-10 sticky bg-white flex justify-between items-center w-full p-5">
-      <Link href="/" className="text-5xl font-bold text-black">
-        <Image src={Logo} alt="logo" className="w-32 object-contain" />
-      </Link>
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-white/10 bg-[#171817] px-5 py-4 text-white shadow-lg md:hidden">
+      <Link href="/" aria-label="Thelal home"><Image src={Logo} alt="ظِلال" className="w-24 brightness-0 invert" priority /></Link>
       <Sheet>
-        <SheetTrigger>
-          <Button as="div" variant="outline">
-            <Menu />
-          </Button>
+        <SheetTrigger asChild>
+          <Button variant="outline" className="border-[#c88a5b] bg-transparent text-[#f2c49f] hover:bg-[#c88a5b] hover:text-[#171817]"><Menu /></Button>
         </SheetTrigger>
-
-        <SheetContent
-          side={lang === "en" ? "left" : "right"}
-          className="space-y-8 pt-20"
-        >
-          <Link href="/" className="text-5xl font-bold text-black ms-auto ">
-            <Image src={Logo} alt="logo" className="w-32 object-contain" />
-          </Link>
-          <ul className="flex flex-col gap-6 max-md:order-3 group text-natural-dark cursor-pointer hover:text-natural-dark/20 duration-200">
-            <Link href="/">
-              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-                {t("home")}
-              </SheetClose>
-            </Link>
-            <Link href="/design">
-              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-                {t("design")}
-              </SheetClose>
-            </Link>
-            <Link href="/build">
-              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-                {t("build")}
-              </SheetClose>
-            </Link>
-            <Link href="/services">
-              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-                {lang === "ar" ? "الخدمات" : "Services"}
-              </SheetClose>
-            </Link>
-            <Link href="/our-blog">
-              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-                {t("our-blog")}
-              </SheetClose>
-            </Link>
-            <Link href="/team">
-              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-                {t("team")}
-              </SheetClose>
-            </Link>
-
-            <Link href="/contact-us">
-              <SheetClose className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
-                {t("contact")}
-              </SheetClose>
-            </Link>
-          </ul>
-          <div className="flex gap-3 text-natural group cursor-pointer hover:text-opacity-50 duration-200 ">
-            <a
-              target="_blank"
-              href={values?.instagram}
-              className="hover:text-opacity-100  hover:text-natural"
-            >
-              <InstagramIcon />
-            </a>
-            <a
-              target="_blank"
-              href={values?.linkedin}
-              className="hover:text-opacity-100  hover:text-natural"
-            >
-              <Linkedin />
-            </a>
-            <a
-              target="_blank"
-              href={values?.x}
-              className="hover:text-opacity-100  hover:text-natural"
-            >
-              <X className="fill-current size-5 mt-1" />
-            </a>
-
-            <a
-              target="_blank"
-              href={values?.whatsapp}
-              className="hover:text-opacity-100  hover:text-natural"
-            >
-              <Whatsapp className="fill-current  size-6" />
-            </a>
-
-            <span className="hover:text-opacity-100  hover:text-natural">
-              <Mail />
-            </span>
-
-            <LocaleSwitcher />
+        <SheetContent side={lang === "en" ? "left" : "right"} className="border-white/10 bg-[#171817] px-7 pt-8 text-white">
+          <div className="flex h-full flex-col">
+            <Image src={Logo} alt="ظِلال" className="mb-12 w-28 brightness-0 invert" />
+            <nav className="flex-1">
+              <ul className="space-y-1 text-lg">
+                {links.map(([href, label]) => (
+                  <li key={href}>
+                    <Link href={href}><SheetClose className="w-full rounded-sm px-3 py-3 text-start text-white/85 transition hover:bg-white/10 hover:text-[#f2c49f]">{label}</SheetClose></Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div className="flex items-center gap-4 border-t border-white/10 pt-6 text-white/70">
+              <a aria-label="Instagram" href={values?.instagram} target="_blank" rel="noreferrer"><InstagramIcon size={20} /></a>
+              <a aria-label="LinkedIn" href={values?.linkedin} target="_blank" rel="noreferrer"><Linkedin size={20} /></a>
+              <a aria-label="X" href={values?.x} target="_blank" rel="noreferrer"><X className="size-4 fill-current" /></a>
+              <a aria-label="WhatsApp" href={values?.whatsapp} target="_blank" rel="noreferrer"><Whatsapp className="size-5 fill-current" /></a>
+              <a aria-label="Email" href={values?.mail}><Mail size={20} /></a>
+              <LocaleSwitcher />
+            </div>
           </div>
         </SheetContent>
       </Sheet>
-    </div>
+    </header>
   );
 }
 
