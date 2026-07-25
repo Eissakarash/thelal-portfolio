@@ -24,7 +24,7 @@ async function Header({ lang }: { lang: "ar" | "en" }) {
           <Image src={Logo} alt="logo" className="w-32 object-contain" />
         </Link>
 
-        <ul className="flex gap-6 max-md:order-3 group text-natural-dark cursor-pointer hover:text-natural-dark/20 duration-200">
+        <ul className="flex justify-center gap-3 text-sm max-md:order-3 group text-natural-dark cursor-pointer hover:text-natural-dark/20 duration-200">
           <li className="hover:text-opacity-100 hover:text-natural-dark text-nowrap">
             <Link href="/">{t("home")}</Link>
           </li>
@@ -51,7 +51,7 @@ async function Header({ lang }: { lang: "ar" | "en" }) {
           </li>
         </ul>
 
-        <div className="flex gap-3 text-natural group cursor-pointer hover:text-opacity-50 duration-200 ms-auto">
+        <div className="flex shrink-0 gap-3 text-natural group cursor-pointer hover:text-opacity-50 duration-200 ms-auto">
           <a
             target="_blank"
             href={values?.instagram}
