@@ -102,7 +102,7 @@ const BuildSchema = z.object({
   architectural_solution: z.object({
     ar: z.string().optional(),
     en: z.string().optional(),
-  }),
+  }).optional(),
   meta: z.object({
     title: z.object({
       ar: z.string().optional(),
@@ -172,7 +172,7 @@ const DesignSchema = z.object({
   architectural_solution: z.object({
     ar: z.string().optional(),
     en: z.string().optional(),
-  }),
+  }).optional(),
   designCategoryId: z.number(),
   architectural_solution_image: z.string().optional(),
   updatedAt: z.date().optional(),

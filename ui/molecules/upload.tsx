@@ -1,6 +1,9 @@
+"use client";
+
 import { FileIcon, X } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useId, useState } from "react";
+import { upload } from "@vercel/blob/client";
 import { Button } from "../atoms";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -15,12 +18,18 @@ type Props = {
 
 const FileUpload = ({ onChange, value, className, label }: Props) => {
   const t = useTranslations("common");
-  const type = value?.split(";")[0].split("/")[1];
+  const inputId = useId();
+  const [isUploading, setIsUploading] = useState(false);
+  const normalizedValue = value?.toLowerCase() || "";
+  const isPdf = normalizedValue.includes(".pdf") || value?.startsWith("data:application/pdf");
+  const isVideo = normalizedValue.includes(".mp4") || value?.startsWith("data:video/");
 
   if (value) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full">
-        {type !== "pdf" ? (
+        {isVideo ? (
+          <video className={cn(className, "max-w-full")} controls src={value} />
+        ) : !isPdf ? (
           <div className={cn(className, "relative")}>
             <Image
               src={value}
@@ -60,27 +69,40 @@ const FileUpload = ({ onChange, value, className, label }: Props) => {
   return (
     <div className="w-full bg-muted/30">
       <label
-        htmlFor="file-upload"
+        htmlFor={inputId}
         className="flex items-center justify-center w-full h-40 cursor-pointer"
       >
         <FileIcon className="w-8 h-8" />
         <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
-          {t("upload")} {label || t("image")}
+          {isUploading ? "Uploading..." : `${t("upload")} ${label || t("image")}`}
         </span>
       </label>
       <input
-        id="file-upload"
+        id={inputId}
         type="file"
-        accept="image/*,.pdf"
+        accept="image/*,video/mp4,.pdf"
         className="hidden"
-        onChange={(e) => {
+        disabled={isUploading}
+        onChange={async (e) => {
           const file = e.target.files?.[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (e: any) => {
-              onChange(e.target.result as string);
-            };
-            reader.readAsDataURL(file);
+          if (!file) return;
+
+          setIsUploading(true);
+          try {
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+            const blob = await upload(`thelal/${Date.now()}-${safeName}`, file, {
+              access: "public",
+              handleUploadUrl: "/api/blob-upload",
+              multipart: file.size > 4 * 1024 * 1024,
+            });
+            onChange(blob.url);
+            toast.success("Uploaded successfully");
+          } catch (error) {
+            console.error(error);
+            toast.error("Could not upload this file");
+          } finally {
+            setIsUploading(false);
+            e.target.value = "";
           }
         }}
       />

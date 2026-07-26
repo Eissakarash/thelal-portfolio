@@ -30,10 +30,16 @@ const BuildForm = ({
 
   const form = useForm<Build>({
     resolver: zodResolver(BuildSchema),
-
-    values: {
+    defaultValues: {
+      images: [],
+      thumbnail: "",
+      title: { ar: "", en: "" },
+      meta: {
+        title: { ar: "", en: "" },
+        description: { ar: "", en: "" },
+      },
       ...values,
-    },
+    } as any,
   });
 
   const onSubmit = (values: Build) => {
