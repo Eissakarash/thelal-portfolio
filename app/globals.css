@@ -3,32 +3,13 @@
 @tailwind utilities;
 
 body {
-  background-color: #f7f6f3;
-  color: #1d211f;
+  background-color: #fff;
+  color: #333;
   font-family: var(--font-ibm);
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-@keyframes whatsapp-pulse {
-  0% { transform: scale(1); opacity: .85; }
-  70% { transform: scale(1.7); opacity: 0; }
-  100% { transform: scale(1.7); opacity: 0; }
-}
-
 ::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c88a5b;
-}
-
-::selection {
-  background: #c88a5b;
-  color: #171817;
+  width: 0px;
 }
 
 [vaul-drawer-direction="bottom"]:after {

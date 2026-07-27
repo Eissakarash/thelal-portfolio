@@ -68,13 +68,9 @@ const BlogPage = async () => {
   const t = await getTranslations("common");
   const data = await getAllblogs({});
   return (
-    <div className="min-h-screen bg-[#f7f6f3] py-14 md:py-20">
-      <div className="mx-auto max-w-[1440px] px-6 md:px-12 lg:px-20">
-      <div className="mb-12 max-w-2xl">
-        <p className="mb-3 text-xs font-medium tracking-[0.2em] text-[#b9784d]">{t("recent_news")}</p>
-        <Text as="h2" className="text-4xl !leading-tight text-[#1d211f] md:text-5xl">{t("our_blog")}</Text>
-      </div>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div className="space-y-6 mt-10 max-md:p-6">
+      <Text as="h2">{t("recent_news")}</Text>
+      <div className="grid grid-cols-2 gap-6 max-lg:grid-cols-1">
         {data?.map(
           (item: any) =>
             dayjs(item.date).isAfter(dayjs().subtract(2, "week")) && (
@@ -88,12 +84,12 @@ const BlogPage = async () => {
         )}
       </div>
 
-      <div className="mt-16 space-y-7">
-        <div className="max-w-2xl">
-          <Text as="h2" className="text-3xl text-[#1d211f]">{t("our_blog")}</Text>
+      <div className="lg:space-y-6 lg:mt-16 mt-6">
+        <div className="text-center">
+          <Text as="h2">{t("our_blog")}</Text>
           <Text as="p">{t("recent_news_description")}</Text>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-4 gap-6 max-lg:grid-cols-1">
           {data?.map((item: any) => (
             <ArticleCard
               {...item}
@@ -104,7 +100,7 @@ const BlogPage = async () => {
             />
           ))}
         </div>
-      </div></div>
+      </div>
     </div>
   );
 };

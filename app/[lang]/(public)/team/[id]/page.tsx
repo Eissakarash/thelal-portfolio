@@ -2,8 +2,8 @@ import { Text } from "@/ui/atoms";
 import React from "react";
 import Image from "next/image";
 import SumpSlider from "@/ui/molecules/sump-carosul";
-import { getAuthorById } from "@/actions/blog";
-import { AuthorType } from "@/schema";
+import { getBuild } from "@/actions/build";
+import { Build } from "@/schema";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({
@@ -12,42 +12,42 @@ export async function generateMetadata({
   params: { id: string; lang: "ar" | "en" };
 }) {
   const t = await getTranslations("common");
-  const data = (await getAuthorById(+id)) as any;
+  const data = await getBuild(+id);
   return {
-    title: `${t("team")} | ${data?.name?.[lang]}`,
+    title: `${t("build")} | ${data?.title}`,
 
     alternates: {
-      canonical: lang === "en" ? `/team/${id}` : `/${lang}/team/${id}`,
+      canonical: lang === "en" ? `/build/${id}` : `/${lang}/build/${id}`,
       languages: {
-        en: `/team/${id}`,
-        "en-US": `/team/${id}`,
-        "en-au": `/team/${id}`,
-        "en-bz": `/team/${id}`,
-        "en-ca": `/team/${id}`,
-        "en-ie": `/team/${id}`,
-        "en-jm": `/team/${id}`,
-        "en-nz": `/team/${id}`,
-        "en-za": `/team/${id}`,
-        "en-tt": `/team/${id}`,
-        "en-gb": `/team/${id}`,
-        "en-us": `/team/${id}`,
-        "ar-AR": `/ar/team/${id}`,
-        "ar-dz": `/ar/team/${id}`,
-        "ar-bh": `/ar/team/${id}`,
-        "ar-eg": `/ar/team/${id}`,
-        "ar-iq": `/ar/team/${id}`,
-        "ar-jo": `/ar/team/${id}`,
-        "ar-kw": `/ar/team/${id}`,
-        "ar-lb": `/ar/team/${id}`,
-        "ar-ly": `/ar/team/${id}`,
-        "ar-ma": `/ar/team/${id}`,
-        "ar-om": `/ar/team/${id}`,
-        "ar-qa": `/ar/team/${id}`,
-        "ar-sa": `/ar/team/${id}`,
-        "ar-sy": `/ar/team/${id}`,
-        "ar-tn": `/ar/team/${id}`,
-        "ar-ae": `/ar/team/${id}`,
-        "ar-ye": `/ar/team/${id}`,
+        en: `/build/${id}`,
+        "en-US": `/build/${id}`,
+        "en-au": `/build/${id}`,
+        "en-bz": `/build/${id}`,
+        "en-ca": `/build/${id}`,
+        "en-ie": `/build/${id}`,
+        "en-jm": `/build/${id}`,
+        "en-nz": `/build/${id}`,
+        "en-za": `/build/${id}`,
+        "en-tt": `/build/${id}`,
+        "en-gb": `/build/${id}`,
+        "en-us": `/build/${id}`,
+        "ar-AR": `/ar/build/${id}`,
+        "ar-dz": `/ar/build/${id}`,
+        "ar-bh": `/ar/build/${id}`,
+        "ar-eg": `/ar/build/${id}`,
+        "ar-iq": `/ar/build/${id}`,
+        "ar-jo": `/ar/build/${id}`,
+        "ar-kw": `/ar/build/${id}`,
+        "ar-lb": `/ar/build/${id}`,
+        "ar-ly": `/ar/build/${id}`,
+        "ar-ma": `/ar/build/${id}`,
+        "ar-om": `/ar/build/${id}`,
+        "ar-qa": `/ar/build/${id}`,
+        "ar-sa": `/ar/build/${id}`,
+        "ar-sy": `/ar/build/${id}`,
+        "ar-tn": `/ar/build/${id}`,
+        "ar-ae": `/ar/build/${id}`,
+        "ar-ye": `/ar/build/${id}`,
       },
     },
     // openGraph: {
@@ -65,53 +65,88 @@ export async function generateMetadata({
   };
 }
 
-async function TeamDetails({
+async function DesignDetails({
   params: { id, lang },
 }: {
   params: { id: string; lang: "ar" | "en" };
 }) {
   const t = await getTranslations("common");
-  let data = (await getAuthorById(+id)) as any;
-
-  // Fallback data for sample authors
-  if (!data) {
-    const sampleData: Record<string, any> = {
-      '1': {
-        name: { en: 'John Doe', ar: 'جون دو' },
-        job_title: { en: 'Architect', ar: 'مهندس معماري' },
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'
-      },
-      '2': {
-        name: { en: 'Jane Smith', ar: 'جين سميث' },
-        job_title: { en: 'Interior Designer', ar: 'مصمم داخلي' },
-        image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400'
-      },
-      '3': {
-        name: { en: 'Mike Johnson', ar: 'مايك جونسون' },
-        job_title: { en: 'Project Manager', ar: 'مدير مشاريع' },
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400'
-      }
-    };
-    data = sampleData[id] || null;
-  }
+  const data = (await getBuild(+id)) as any;
   return (
     <div className="space-y-10 mt-10 max-md:p-6">
-      {data?.image && (
-        <Image
-          src={data.image}
-          width={400}
-          height={400}
-          alt={`Portrait of ${data?.name?.[lang]}`}
-          className="w-full h-full object-cover aspect-square mx-auto"
-        />
-      )}
+      <SumpSlider images={data?.images} />
 
-      <Text as="h1">{data?.name?.[lang]}</Text>
+      <Text as="h1">{data?.title?.[lang]}</Text>
       <div>
-        <p className="text-lg">{data?.job_title?.[lang]}</p>
+        <ul className="space-y-4">
+          {data?.location?.[lang] && (
+            <li>
+              <strong>{t("location")}: </strong>
+              {data?.location?.[lang]}
+            </li>
+          )}
+          {data?.scope?.[lang] && (
+            <li>
+              <strong>{t("scope")}: </strong>
+              {data?.scope?.[lang]}
+            </li>
+          )}
+          {data?.year && (
+            <li>
+              <strong>{t("year")}: </strong>
+              {data?.year}
+            </li>
+          )}
+          {data?.status?.[lang] && (
+            <li>
+              <strong>{t("status")}: </strong>
+              {data?.status?.[lang]}
+            </li>
+          )}
+          {data?.team?.[lang] && (
+            <li>
+              <strong>{t("team")}: </strong>
+              {data?.team?.[lang]}
+            </li>
+          )}
+        </ul>
       </div>
+      {data?.briefing?.[lang] && (
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-10 items-center">
+          {data?.briefing_image && (
+            <Image
+              src={data?.briefing_image}
+              width={400}
+              height={400}
+              alt="section-image"
+              className="w-full h-full object-cover aspect-square"
+            />
+          )}
+          <div>
+            <Text as="h4">{t("briefing")}:</Text>
+            <Text as="span">{data?.briefing?.[lang]}</Text>
+          </div>
+        </div>
+      )}
+      {data?.architectural_solution?.[lang] && (
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-10 items-center">
+          <div>
+            <Text as="h4">{t("architectural_solution")}:</Text>
+            <Text as="span">{data?.architectural_solution?.[lang]}</Text>
+          </div>
+          {data?.architectural_solution_image && (
+            <Image
+              src={data?.architectural_solution_image}
+              alt="section-image"
+              width={400}
+              height={400}
+              className="w-full h-full object-cover aspect-square"
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
-export default TeamDetails;
+export default DesignDetails;

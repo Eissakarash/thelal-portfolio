@@ -61,20 +61,12 @@ export async function generateMetadata({
   };
 }
 
-async function Page({ params: { lang } }: { params: { lang: "ar" | "en" } }) {
+async function Page() {
   const t = await getTranslations("common");
   return (
-    <div className="bg-[#f7f6f3] py-14 md:py-20">
-      <div className="mx-auto grid max-w-[1160px] gap-10 px-6 md:grid-cols-[0.8fr_1.2fr] md:px-12">
-        <aside className="bg-[#171817] p-8 text-white md:p-12">
-          <p className="text-xs font-medium tracking-[0.2em] text-[#f2c49f]">{lang === "ar" ? "لنتحدث" : "LET'S TALK"}</p>
-          <Text as="h2" className="mt-5 text-4xl leading-tight text-white">{t("send_us_message")}</Text>
-          <p className="mt-6 leading-8 text-white/65">{lang === "ar" ? "أخبرنا عن مشروعك، وسنتواصل معك لنبدأ من النقطة المناسبة." : "Tell us about your project and we will get in touch to find the right starting point."}</p>
-        </aside>
-        <section className="bg-white p-8 shadow-[0_20px_70px_rgba(27,29,28,0.08)] md:p-12">
-          <ContactForm />
-        </section>
-      </div>
+    <div className="mx-[15%] space-y-4 pt-10 ">
+      <Text as="h2">{t("send_us_message")}</Text>
+      <ContactForm />
     </div>
   );
 }

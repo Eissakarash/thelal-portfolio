@@ -75,49 +75,7 @@ async function DesignDetails({
   params: { id: string; lang: "ar" | "en" };
 }) {
   const t = await getTranslations("common");
-  let data = (await getBuild(+id)) as any;
-
-  // Fallback data for sample builds
-  if (!data) {
-    const sampleData: Record<string, any> = {
-      '1': {
-        images: ['https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800'],
-        title: { en: 'Modern Villa', ar: 'فيلا حديثة' },
-        location: { en: 'Dubai, UAE', ar: 'دبي، الإمارات' },
-        scope: { en: 'Residential Design', ar: 'تصميم سكني' },
-        year: '2023',
-        status: { en: 'Completed', ar: 'مكتمل' },
-        team: { en: 'John Doe, Jane Smith', ar: 'جون دو، جين سميث' },
-        briefing: { en: 'A luxurious modern villa with contemporary design.', ar: 'فيلا فاخرة بتصميم عصري.' },
-        briefing_image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400',
-        architectural_solution: { en: 'Open plan design with natural lighting.', ar: 'تصميم مفتوح مع إضاءة طبيعية.' },
-        architectural_solution_image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400'
-      },
-      '2': {
-        images: ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=800'],
-        title: { en: 'Apartment Complex', ar: 'مجمع شقق' },
-        location: { en: 'Abu Dhabi, UAE', ar: 'أبوظبي، الإمارات' },
-        scope: { en: 'Multi-unit Residential', ar: 'سكن متعدد الوحدات' },
-        year: '2022',
-        status: { en: 'Completed', ar: 'مكتمل' },
-        team: { en: 'Mike Johnson', ar: 'مايك جونسون' },
-        briefing: { en: 'Modern apartment complex for urban living.', ar: 'مجمع شقق عصري للحياة الحضرية.' },
-        briefing_image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400'
-      },
-      '3': {
-        images: ['https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800'],
-        title: { en: 'Office Building', ar: 'مبنى مكاتب' },
-        location: { en: 'Sharjah, UAE', ar: 'الشارقة، الإمارات' },
-        scope: { en: 'Commercial Design', ar: 'تصميم تجاري' },
-        year: '2024',
-        status: { en: 'Under Construction', ar: 'قيد الإنشاء' },
-        team: { en: 'Sarah Wilson', ar: 'سارة ويلسون' },
-        briefing: { en: 'Contemporary office building with sustainable features.', ar: 'مبنى مكاتب عصري مع ميزات مستدامة.' },
-        briefing_image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400'
-      }
-    };
-    data = sampleData[id] || null;
-  }
+  const data = (await getBuild(+id)) as any;
   return (
     <div className="space-y-10 mt-10 max-md:p-6">
       <SumpSlider images={data?.images} />

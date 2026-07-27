@@ -79,36 +79,30 @@ const BuildPage = async ({
       return;
     })) as any;
   return (
-    <div className="min-h-screen bg-[#f7f6f3] py-14 md:py-20">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-12 px-6 md:px-12 lg:px-20">
-        <div className="max-w-2xl">
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] text-[#b9784d]">{lang === "ar" ? "من الموقع إلى التفاصيل" : "FROM SITE TO DETAIL"}</p>
-          <h1 className="text-4xl font-semibold text-[#1d211f] md:text-5xl">{t("build")}</h1>
-          <p className="mt-4 text-base leading-8 text-[#5d625f]">{lang === "ar" ? "تنفيذ مدروس يترجم الرؤية إلى مكان متقن ومتكامل." : "Considered delivery that turns vision into a refined, complete place."}</p>
-        </div>
+    <div className="min-h-screen">
+      <div className="flex flex-col gap-6 md:my-10 md:px-10 md:py-5">
         {values?.map((value: any) => (
-          <section key={value.id} className="border-t border-[#d7d2ca] pt-8">
+          <div key={value.id} className="flex flex-col gap-6  py-5">
             {!!value?.Build.length && (
-              <h2 className="mb-7 text-2xl font-semibold text-[#1d211f] md:text-3xl">
+              <h2 className="md:md:text-[30px] text-[26px] font-bold uppercase ">
                 {value.name[lang]}
               </h2>
             )}
 
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid md:grid-cols-4 grid-cols-2 gap-4 md:gap-10">
               {value?.Build?.map((build: Build) => (
-                <Link key={build.id} href={`/build/${build.id}`} className="group relative block overflow-hidden bg-[#171817]">
+                <Link key={build.id} href={`/build/${build.id}`}>
                   <Image
                     width={300}
                     height={300}
                     src={build.thumbnail}
                     alt="section-image"
-                    className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105 group-hover:opacity-80"
+                    className="w-full h-full aspect-square object-cover"
                   />
-                  <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-5 pb-5 pt-16 text-sm font-medium text-white">{build.title?.[lang]}</span>
                 </Link>
               ))}
             </div>
-          </section>
+          </div>
         ))}
       </div>
     </div>

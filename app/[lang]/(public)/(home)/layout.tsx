@@ -1,51 +1,217 @@
-import Image, { StaticImageData } from "next/image";
+import { getTranslations } from "next-intl/server";
 import React from "react";
-import { ArrowUpRight, Building2, Compass, DraftingCompass, MessageCircle, Ruler, Users } from "lucide-react";
-import { Link } from "@/utils/navigation";
-import prisma from "@/lib/prisma";
+import Image from "next/image";
+import SectionImage6 from "@/images/qoute.png";
+import { Button, Text } from "@/ui/atoms";
+import MapImage from "@/images/map.png";
 import SectionImage1 from "@/images/01_2-Photo.png";
 import SectionImage2 from "@/images/01_4-Photo.png";
 import SectionImage3 from "@/images/01_5-Photo.png";
+import ProjectImage1 from "@/images/00-Maquitte.jpg";
+import ProjectImage2 from "@/images/Cam_04.jpg";
+import { Link } from "@/utils/navigation";
+import NumberTicker from "@/ui/molecules/number-ticker";
+import prisma from "@/lib/prisma";
 
-type Project = { id?: number; title: { ar?: string; en?: string }; thumbnail: string | StaticImageData; href: string; kind: { ar: string; en: string } };
-const fallbackProjects: Project[] = [
-  { title: { ar: "سكن خاص معاصر", en: "Contemporary Residence" }, thumbnail: SectionImage1, href: "/design", kind: { ar: "تصميم معماري", en: "Architecture" } },
-  { title: { ar: "مساحات داخلية هادئة", en: "Refined Interior Spaces" }, thumbnail: SectionImage2, href: "/design", kind: { ar: "تصميم داخلي", en: "Interiors" } },
-  { title: { ar: "تنفيذ يعتني بالتفاصيل", en: "Detail-Led Delivery" }, thumbnail: SectionImage3, href: "/build", kind: { ar: "تنفيذ وإشراف", en: "Delivery" } },
-];
+const HomeLayout = async ({
+  hero,
+  params: { lang },
+}: {
+  hero: React.ReactNode;
+  params: { lang: string };
+}) => {
+  const t = await getTranslations("common");
+  const values = (await prisma.home.findFirst().catch((error) => {
+    console.error(error);
+    return;
+  })) as any;
+  const build = (await prisma.build.findMany().catch((error) => {
+    console.error(error);
+    return;
+  })) as any;
+  const design = (await prisma.design.findMany().catch((error) => {
+    console.error(error);
+    return;
+  })) as any;
+  const fallbackDesign = [
+    {
+      title: { ar: "تصميم داخلي", en: "Interior Design" },
+      thumbnail: ProjectImage1,
+      href: "/design",
+    },
+    {
+      title: { ar: "هوية المساحة", en: "Space Identity" },
+      thumbnail: ProjectImage2,
+      href: "/design",
+    },
+  ];
+  const fallbackBuild = [
+    {
+      title: { ar: "تنفيذ المشاريع", en: "Project Delivery" },
+      thumbnail: SectionImage1,
+      href: "/build",
+    },
+    {
+      title: { ar: "إدارة الموقع", en: "Site Management" },
+      thumbnail: SectionImage2,
+      href: "/build",
+    },
+  ];
+  const designItems = design?.length ? design.slice(0, 2) : fallbackDesign;
+  const buildItems = build?.length ? build.slice(0, 2) : fallbackBuild;
 
-const HomeLayout = async ({ hero, params: { lang } }: { hero: React.ReactNode; params: { lang: string } }) => {
-  const isArabic = lang === "ar";
-  const [home, build, design] = await Promise.all([
-    prisma.home.findFirst().catch(() => null),
-    prisma.build.findMany({ take: 3, orderBy: { id: "desc" } }).catch(() => []),
-    prisma.design.findMany({ take: 3, orderBy: { id: "desc" } }).catch(() => []),
-  ]);
-  const databaseProjects: Project[] = [
-    ...design.map((item) => ({ id: item.id, title: item.title as Project["title"], thumbnail: item.thumbnail, href: `/design/${item.id}`, kind: { ar: "تصميم", en: "Design" } })),
-    ...build.map((item) => ({ id: item.id, title: item.title as Project["title"], thumbnail: item.thumbnail, href: `/build/${item.id}`, kind: { ar: "تنفيذ", en: "Build" } })),
-  ];
-  const projects = databaseProjects.length ? databaseProjects.slice(0, 3) : fallbackProjects;
-  const services = [
-    { icon: DraftingCompass, ar: "التصميم المعماري", en: "Architectural Design", arText: "نحوّل الرؤية إلى مخطط واضح ومكان متوازن.", enText: "Turning vision into a balanced, purposeful place." },
-    { icon: Compass, ar: "التصميم الداخلي", en: "Interior Design", arText: "تفاصيل داخلية عملية تحمل طابع المكان.", enText: "Interior details shaped around everyday life." },
-    { icon: Building2, ar: "إدارة المشاريع", en: "Project Management", arText: "تنسيق واعٍ بين الوقت والجودة والميزانية.", enText: "Clear coordination across time, quality, and budget." },
-    { icon: Ruler, ar: "الإشراف والتنفيذ", en: "Supervision & Delivery", arText: "متابعة دقيقة من الموقع حتى التسليم.", enText: "Careful follow-through from site to handover." },
-    { icon: Users, ar: "الدعم الفني", en: "Technical Support", arText: "حلول عملية تحافظ على جودة المكان بعد التنفيذ.", enText: "Practical support that protects long-term quality." },
-    { icon: MessageCircle, ar: "الاستشارات الهندسية", en: "Engineering Advisory", arText: "قرار هندسي مدروس قبل بدء أي خطوة.", enText: "Sound engineering decisions before work begins." },
-  ];
-  const stats = [
-    { value: home?.project || "15", ar: "مشروعًا منجزًا", en: "Completed Projects" }, { value: "9", ar: "سنوات من الخبرة", en: "Years of Experience" }, { value: home?.client || "170", ar: "عميلًا يثق بنا", en: "Trusted Clients" }, { value: "6", ar: "خدمات متخصصة", en: "Specialized Services" },
-  ];
-  return <main className="bg-[#1a1a18] text-[#f7f4ee]">
-    <section id="home" className="scroll-mt-24">{hero}</section>
-    <section className="border-y border-white/10 bg-[#151614] px-6 py-16 md:px-12 md:py-24"><div className="mx-auto grid max-w-[1320px] grid-cols-2 gap-y-10 md:grid-cols-4">{stats.map((stat) => <div key={stat.en} className="text-center md:border-s md:border-white/10 md:first:border-s-0"><p className="text-4xl font-semibold text-[#c88a5b] md:text-6xl">{stat.value}<span className="ms-1 text-2xl">+</span></p><p className="mt-3 text-sm text-white/65">{isArabic ? stat.ar : stat.en}</p></div>)}</div></section>
-    <section id="about" className="scroll-mt-24 mx-auto grid max-w-[1320px] gap-10 px-6 py-20 md:grid-cols-[.85fr_1.15fr] md:items-center md:px-12 md:py-32"><div className="relative aspect-[4/5] overflow-hidden border border-[#c88a5b]/60 p-3"><Image src={home?.image_1 || SectionImage1} alt="ظِلال" fill className="object-cover p-3" sizes="(min-width: 768px) 40vw, 100vw" /><div className="absolute inset-x-7 bottom-7 border-s-2 border-[#c88a5b] bg-[#161715]/90 p-4"><p className="text-xs tracking-[.18em] text-[#f2c49f]">{isArabic ? "ظِلال" : "THELAL"}</p><p className="mt-1 text-sm text-white/75">{isArabic ? "هندسة تصنع قيمة للمكان" : "Architecture with lasting value"}</p></div></div><div className="md:ps-10"><p className="text-xs font-semibold tracking-[.22em] text-[#c88a5b]">{isArabic ? "من نحن" : "ABOUT THELAL"}</p><h2 className="mt-5 max-w-2xl text-4xl font-semibold leading-tight md:text-6xl">{isArabic ? "نبني هوية المكان قبل أن نبني تفاصيله." : "We shape a place's identity before its details."}</h2><p className="mt-7 max-w-2xl text-base leading-8 text-white/70 md:text-lg">{isArabic ? "نؤمن أن التصميم الجيد يوازن بين الجمال والوظيفة. من أول فكرة إلى لحظة التسليم، نصنع مساحات واضحة ومتقنة وقريبة من أصحابها." : "Thoughtful design balances beauty and function. From the first idea to delivery, we shape refined spaces that feel personal."}</p><Link href="#contact" className="mt-9 inline-flex items-center gap-2 border border-[#c88a5b] px-5 py-3 text-sm font-semibold text-[#f2c49f] transition hover:bg-[#c88a5b] hover:text-[#171817]">{isArabic ? "ابدأ مشروعك" : "Start your project"}<ArrowUpRight size={17} /></Link></div></section>
-    <section id="services" className="scroll-mt-24 bg-[#302f2c] px-6 py-20 md:px-12 md:py-28"><div className="mx-auto max-w-[1320px]"><div className="max-w-2xl"><p className="text-xs font-semibold tracking-[.22em] text-[#c88a5b]">{isArabic ? "ما نقدمه" : "WHAT WE DO"}</p><h2 className="mt-4 text-4xl font-semibold md:text-5xl">{isArabic ? "خدمات متكاملة لمساحات لها معنى" : "Complete services for meaningful spaces"}</h2><p className="mt-5 leading-8 text-white/65">{isArabic ? "نعمل معك من الفكرة الأولى حتى يكتمل المكان." : "We work with you from the first idea until the place is complete."}</p></div><div className="mt-12 grid border-t border-white/10 md:grid-cols-3">{services.map((service, index) => { const Icon = service.icon; return <Link href="/services" key={service.en} className="group border-b border-white/10 p-6 transition hover:bg-white/[.04] md:border-e"><span className="flex size-11 items-center justify-center border border-[#c88a5b]/60 text-[#f2c49f]"><Icon size={20} /></span><p className="mt-7 text-xs text-[#c88a5b]">0{index + 1}</p><h3 className="mt-2 text-xl font-semibold">{isArabic ? service.ar : service.en}</h3><p className="mt-3 text-sm leading-7 text-white/60">{isArabic ? service.arText : service.enText}</p></Link>})}</div></div></section>
-    <section id="projects" className="scroll-mt-24 px-6 py-20 md:px-12 md:py-28"><div className="mx-auto max-w-[1320px]"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="text-xs font-semibold tracking-[.22em] text-[#c88a5b]">{isArabic ? "أعمال مختارة" : "SELECTED WORK"}</p><h2 className="mt-4 text-4xl font-semibold md:text-5xl">{isArabic ? "مشاريع تحكي قصتها بنفسها" : "Projects that speak for themselves"}</h2></div><Link href="/design" className="inline-flex items-center gap-2 text-sm font-semibold text-[#f2c49f] hover:text-white">{isArabic ? "عرض جميع الأعمال" : "View all projects"}<ArrowUpRight size={17} /></Link></div><div className="mt-12 grid gap-6 md:grid-cols-3">{projects.map((project, index) => <Link href={project.href} key={`${project.id || project.href}-${index}`} className="group overflow-hidden border border-white/10 bg-[#252522]"><div className="relative aspect-[4/3] overflow-hidden"><Image src={project.thumbnail} alt={project.title?.[lang] || project.title?.en || "Thelal project"} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition duration-700 group-hover:scale-105" /><span className="absolute start-4 top-4 border border-[#c88a5b] bg-[#171817]/85 px-3 py-1 text-xs text-[#f2c49f]">0{index + 1}</span></div><div className="flex items-end justify-between gap-4 p-5"><div><p className="text-xs text-[#c88a5b]">{project.kind[isArabic ? "ar" : "en"]}</p><h3 className="mt-2 text-xl font-semibold">{project.title?.[lang] || project.title?.en}</h3></div><ArrowUpRight className="shrink-0 text-[#c88a5b]" size={21} /></div></Link>)}</div></div></section>
-    <section id="team" className="scroll-mt-24 bg-[#151614] px-6 py-20 md:px-12 md:py-28"><div className="mx-auto grid max-w-[1320px] gap-10 md:grid-cols-[.7fr_1.3fr] md:items-end"><div><p className="text-xs font-semibold tracking-[.22em] text-[#c88a5b]">{isArabic ? "فريق ظِلال" : "THELAL TEAM"}</p><h2 className="mt-4 text-4xl font-semibold leading-tight md:text-5xl">{isArabic ? "خبرات مختلفة تجمعها عين واحدة للتفاصيل." : "Different expertise, one eye for detail."}</h2></div><div className="grid grid-cols-3 border-s border-white/10"><div className="px-5"><p className="text-3xl text-[#c88a5b]">01</p><p className="mt-5 text-sm text-white/65">{isArabic ? "رؤية مشتركة" : "Shared vision"}</p></div><div className="border-s border-white/10 px-5"><p className="text-3xl text-[#c88a5b]">02</p><p className="mt-5 text-sm text-white/65">{isArabic ? "تنسيق دقيق" : "Precise coordination"}</p></div><div className="border-s border-white/10 px-5"><p className="text-3xl text-[#c88a5b]">03</p><p className="mt-5 text-sm text-white/65">{isArabic ? "تسليم متقن" : "Refined delivery"}</p></div></div></div><Link href="/team" className="mx-auto mt-12 inline-flex items-center gap-2 border-b border-[#c88a5b] pb-2 text-sm text-[#f2c49f]">{isArabic ? "تعرّف على الفريق" : "Meet the team"}<ArrowUpRight size={17} /></Link></section>
-    <section id="blog" className="scroll-mt-24 px-6 py-20 md:px-12 md:py-28"><div className="mx-auto max-w-[1320px]"><p className="text-xs font-semibold tracking-[.22em] text-[#c88a5b]">{isArabic ? "من المدونة" : "FROM THE JOURNAL"}</p><h2 className="mt-4 text-4xl font-semibold md:text-5xl">{isArabic ? "أفكار نشاركها من عالم العمارة" : "Ideas from our world of architecture"}</h2><div className="mt-10 grid border-t border-white/10 md:grid-cols-3">{[["كيف يبدأ المشروع المعماري الناجح؟", "How does a successful project begin?"], ["التفاصيل التي تصنع الفرق في المكان", "The details that shape a place"], ["بين الجمال والوظيفة: معادلة التصميم", "Beauty and function in balance"]].map(([ar, en], index) => <Link href="/our-blog" key={en} className="border-b border-white/10 p-6 md:border-e"><p className="text-xs text-[#c88a5b]">0{index + 1}</p><h3 className="mt-8 text-xl font-semibold">{isArabic ? ar : en}</h3><p className="mt-4 text-sm leading-7 text-white/60">{isArabic ? "نظرة واضحة تساعد على اتخاذ قرار أفضل للمكان." : "A clear perspective for better decisions about place."}</p></Link>)}</div></div></section>
-    <section id="contact" className="scroll-mt-24 bg-[#c88a5b] px-6 py-20 text-[#171817] md:px-12 md:py-28"><div className="mx-auto grid max-w-[1320px] gap-10 md:grid-cols-[1.25fr_.75fr] md:items-end"><div><p className="text-xs font-semibold tracking-[.2em]">{isArabic ? "لنبدأ" : "LET'S BEGIN"}</p><h2 className="mt-4 max-w-4xl text-4xl font-semibold leading-tight md:text-6xl">{isArabic ? "لديك مساحة تستحق أن تُروى بشكل أفضل." : "Have a space that deserves a better story?"}</h2><p className="mt-6 max-w-2xl leading-8 text-[#171817]/75">{isArabic ? "شاركنا رؤيتك وسنتواصل معك لنحوّلها إلى تجربة معمارية متكاملة." : "Share your vision and we will help turn it into a complete architectural experience."}</p></div><Link href="/contact-us" className="inline-flex items-center justify-center gap-2 border border-[#171817] px-7 py-4 text-sm font-semibold transition hover:bg-[#171817] hover:text-white">{isArabic ? "تواصل معنا" : "Contact us"}<ArrowUpRight size={18} /></Link></div></section>
-  </main>;
+  return (
+    <>
+      <div className="md:h-[85vh] h-[93vh]  md:pt-12 p-0">{hero}</div>
+      <div className="text-5xl flex gap-10 items-center justify-center  md:py-[200px] my-10 ">
+        <div className="flex flex-col items-center">
+          <span>
+            + <NumberTicker value={Number(values?.project || 0)} />
+          </span>
+          <Text variant="p"> {t("projects")} </Text>
+        </div>
+        <div className="flex flex-col items-center">
+          <span>
+            + <NumberTicker value={Number(values?.client || 0)} />
+          </span>
+          <Text variant="p"> {t("clients")} </Text>
+        </div>
+      </div>
+      <Image
+        src={values?.image_1 || SectionImage1}
+        alt="section-image"
+        width={1000}
+        height={1000}
+        className="w-full pb-10 object-cover max-sm:aspect-square"
+      />
+
+      <div className="flex flex-col md:gap-16 gap-6 md:px-20  md:my-10 md:py-10 max-sm:px-6">
+        <h2 className="md:text-[50px] font-bold text-[32px]">{t("design")}</h2>
+        <div className="flex justify-between gap-6">
+          {designItems.map((value: any) => (
+            <Link
+              key={value.id || value.title.en}
+              href={value.href || `/design/${value.id}`}
+              className="flex flex-col gap-2"
+            >
+              <Image
+                width={383}
+                height={383}
+                src={value.thumbnail}
+                alt="section-image"
+                className="w-[383px] aspect-square object-cover"
+              />
+              <Text as="h2" variant="h2">
+                {value.title?.[lang]}
+              </Text>
+            </Link>
+          ))}
+        </div>
+        <Link href="/design">
+          <Button className=" ms-auto">
+            {t("view_all_", {
+              name: t("design"),
+            })}
+          </Button>
+        </Link>
+      </div>
+
+      <Image
+        src={values?.image_2 || SectionImage2}
+        alt="section-image"
+        width={1000}
+        height={1000}
+        className="w-full  my-20"
+      />
+
+      <div className="flex flex-col gap-16 md:px-20   md:my-10 md:py-10 p-6">
+        <h2 className="md:text-[50px] font-bold text-[32px]">{t("build")}</h2>
+        <div className="flex justify-between gap-6">
+          {buildItems.map((value: any) => (
+            <Link
+              key={value.id || value.title.en}
+              href={value.href || `/build/${value.id}`}
+              className="flex flex-col gap-2"
+            >
+              <Image
+                width={383}
+                height={383}
+                src={value.thumbnail}
+                alt="section-image"
+                className="w-[383px] aspect-square object-cover"
+              />
+              <Text as="h2" variant="h2">
+                {value.title?.[lang]}
+              </Text>
+            </Link>
+          ))}
+        </div>
+        <Button className="ms-auto">
+          {t("view_all_", {
+            name: t("build"),
+          })}
+        </Button>
+      </div>
+
+      {values?.location && (
+        <Link href={values?.location as string} target="_blank">
+          <Image
+            src={values?.image_3 || SectionImage3}
+            alt="section-image"
+            width={1000}
+            height={1000}
+            className="w-full my-20 "
+          />
+        </Link>
+      )}
+
+      <div className="flex flex-col gap-8 md:px-20  md:py-10 p-6">
+        <h2 className="md:text-[50px] font-bold text-[32px] ">
+          {t("our_goal")}
+        </h2>
+        <h3 className="text-lg md:w-1/2  ">
+          {values?.aim?.[lang] ||
+            (lang === "ar"
+              ? "نصمم وننفذ مساحات تعكس هوية العميل وتوازن بين الجمال والوظيفة."
+              : "We design and deliver spaces that reflect each client's identity while balancing beauty and function.")}
+        </h3>
+        <div className="h-[340px] overflow-hidden relative mt-20">
+          <a target="_blank" href={values?.location as string}>
+            <Image
+              src={MapImage}
+              alt="map"
+              className="h-[340px] w-full object-cover"
+            />
+          </a>
+        </div>
+      </div>
+
+      <div className="relative  mt-20 h-[80vh]">
+        <div className="space-y-5 absolute text-center start-1/2 top-1/2 rtl:translate-x-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+          <h3 className="text-[31px]">
+            "
+            {values?.quote?.[lang] ||
+              (lang === "ar"
+                ? "كل مساحة تبدأ بفكرة، وتكتمل بتفاصيلها."
+                : "Every space begins with an idea and comes alive through its details.")}
+            "
+          </h3>
+          <p className="text-lg">
+            -{" "}
+            {values?.author?.[lang] ||
+              (lang === "ar" ? "فريق ذلال" : "Thelal Team")}
+          </p>
+        </div>
+        <Image
+          src={values?.quote_image || SectionImage6}
+          alt="section-image"
+          width={900}
+          height={700}
+          className="w-full h-full object-cover "
+        />
+      </div>
+    </>
+  );
 };
+
 export default HomeLayout;

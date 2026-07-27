@@ -59,28 +59,27 @@ const teamPage = async ({
   const t = await getTranslations("common");
   const data = (await getAllAuthors()) as any;
   return (
-    <div className="min-h-screen bg-[#f7f6f3] py-14 md:py-20">
-      <div className="mx-auto max-w-[1440px] px-6 md:px-12 lg:px-20">
-        <div className="mb-12 max-w-2xl">
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] text-[#b9784d]">{lang === "ar" ? "الخبرات التي تصنع الفرق" : "THE PEOPLE BEHIND THE WORK"}</p>
-          <h1 className="text-4xl font-semibold text-[#1d211f] md:text-5xl">{t("our_team")}</h1>
-        </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="min-h-screen">
+      <div className="flex flex-col gap-6 my-10 px-10 py-5 ">
+        <h2 className="md:text-[30px] text-[26px] font-bold uppercase ">
+          {t("our_team")}
+        </h2>
+        <div className="grid grid-cols-3 max-md:grid-cols-1  gap-10">
           {data?.map((team: AuthorType) => (
-            <Link key={team.id} href={`/team/${team.id}`} className="group overflow-hidden bg-white shadow-[0_18px_45px_rgba(27,29,28,0.07)]">
+            <Link key={team.id} href={`/team/${team.id}`}>
               <Image
                 loading="lazy"
                 src={team.image}
                 alt={`Portrait of ${team.name}`}
                 width={100}
                 height={100}
-                className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover aspect-square"
               />
-              <div className="p-6">
-                <h2 className="self-stretch text-xl font-semibold text-[#1d211f]">
+              <div className="p-2">
+                <h2 className="self-stretch text-lg  text-zinc-800">
                   {team.name[lang]}
                 </h2>
-                <p className="mt-1 text-sm text-[#b9784d]">{team.job_title[lang]}</p>
+                <p className="text-zinc-500">{team.job_title[lang]}</p>
               </div>
             </Link>
           ))}
