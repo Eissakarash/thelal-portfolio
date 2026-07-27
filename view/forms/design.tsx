@@ -15,6 +15,7 @@ import { Form } from "@/ui/molecules/form";
 import FormSelect from "@/ui/molecules/form-select";
 import FormTextArea from "@/ui/molecules/form-textarea";
 import { Category, Design, DesignSchema } from "@/schema";
+import ContentGuide, { ContentNotice } from "@/ui/dashboard/content-guide";
 
 const DesignForm = ({
   values,
@@ -66,6 +67,14 @@ const DesignForm = ({
               key: t("design"),
             })}
         </Text>
+        <ContentNotice>
+          A design is a completed architecture or interior project shown on the Design page. Start with the cover image, then add the gallery and project information below.
+        </ContentNotice>
+        <ContentGuide
+          title="Project cover image"
+          description="This image appears first in the designs grid and is the main visual visitors see before opening the project."
+          size="1600 x 1000 px (16:10)"
+        />
         <FormUpload
           className="w-full min-h-[150px]"
           form={form}
@@ -136,6 +145,11 @@ const DesignForm = ({
             </div>
           ))}
         </div>
+        <ContentGuide
+          title="Project gallery"
+          description="Add 4 to 8 images from the same project. Use the same orientation where possible so the gallery feels consistent."
+          size="1600 x 1200 px (4:3)"
+        />
         <Button
           isLoading={isPending}
           onClick={() => {
@@ -154,6 +168,9 @@ const DesignForm = ({
         <hr />
 
         <div className="space-y-5">
+          <ContentNotice>
+            Category decides where this project is grouped. Create a category first only when the correct one does not already exist.
+          </ContentNotice>
           <FormSelect
             form={form}
             name="designCategoryId"
@@ -241,6 +258,11 @@ const DesignForm = ({
             label={t("briefing_image")}
             className="size-[500px]"
           />
+          <ContentGuide
+            title="Project briefing image"
+            description="Use a plan, concept board, or strong supporting image that explains the project story."
+            size="1200 x 900 px (4:3)"
+          />
           <FormTextArea
             form={form}
             name="briefing.ar"
@@ -261,6 +283,11 @@ const DesignForm = ({
             name="architectural_solution_image"
             label={t("architectural_solution_image")}
             className="size-[500px]"
+          />
+          <ContentGuide
+            title="Architectural solution image"
+            description="Use an image that best shows the main architectural idea, material, detail, or completed space."
+            size="1200 x 900 px (4:3)"
           />
           <FormTextArea
             form={form}

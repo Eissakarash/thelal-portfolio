@@ -15,6 +15,7 @@ import { Form } from "@/ui/molecules/form";
 import FormUpload from "@/ui/molecules/form-upload";
 import FormInput from "@/ui/molecules/form-input";
 import { toast } from "sonner";
+import ContentGuide, { ContentNotice } from "@/ui/dashboard/content-guide";
 
 const HomeForm = ({ values }: { values: any }) => {
   const t = useTranslations("common");
@@ -50,6 +51,17 @@ const HomeForm = ({ values }: { values: any }) => {
         <Text variant="h2" className="flex gap-2 items-baseline">
           {t("home")}
         </Text>
+
+        <ContentNotice>
+          This page controls the images, social links, statistics, and quote shown on the website home page.
+          Save once after completing a section, then use the Website button above to review it.
+        </ContentNotice>
+
+        <ContentGuide
+          title="Main slider images"
+          description="These are the large images at the very top of the home page. Use a clear exterior or interior image with enough empty space for the heading."
+          size="1920 x 1080 px (16:9)"
+        />
 
         <div className="grid  grid-cols-1 lg:grid-cols-3 gap-10 w-full items-center">
           {form.getValues("images")?.map((_phone, index) => (
@@ -97,6 +109,11 @@ const HomeForm = ({ values }: { values: any }) => {
           {t("add_image_to_slider")}
         </Button>
         <hr />
+        <ContentGuide
+          title="Home page supporting images"
+          description="These three images are used in the home page content sections. Keep one visual style and avoid screenshots or images with embedded text."
+          size="1200 x 1200 px (square)"
+        />
         <div className="space-y-5">
           <FormUpload
             form={form}
@@ -171,6 +188,11 @@ const HomeForm = ({ values }: { values: any }) => {
             name="quote_image"
             label={t("quote_image")}
             className="size-[500px]"
+          />
+          <ContentGuide
+            title="Quote portrait image"
+            description="Use a clean portrait of the speaker or a refined project detail. This appears beside the quote on the home page."
+            size="1200 x 1200 px (square)"
           />
           <FormInput
             form={form}
