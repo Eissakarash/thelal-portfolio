@@ -133,7 +133,7 @@ const authorUpsert = async (value: AuthorType) => {
   if (value.id) {
     return db.update({
       where: {
-        id: 1,
+        id: value.id,
       },
       data: {
         ...value,
