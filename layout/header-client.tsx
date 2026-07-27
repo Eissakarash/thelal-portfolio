@@ -50,7 +50,11 @@ export default function HeaderClient({ items, socials }: { items: NavigationItem
           <Image
             src={Logo}
             alt="ظِلال"
-            className={compact ? "w-20 object-contain transition-all duration-300" : "w-28 object-contain transition-all duration-300"}
+            className={
+              compact
+                ? "w-20 object-contain brightness-0 invert opacity-95 transition-all duration-300"
+                : "w-28 object-contain brightness-0 invert opacity-95 transition-all duration-300"
+            }
           />
         </Link>
 
