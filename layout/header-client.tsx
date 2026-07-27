@@ -35,8 +35,8 @@ export default function HeaderClient({ items, socials }: { items: NavigationItem
     <header
       className={
         compact
-          ? "sticky top-0 z-50 border-b border-[#c88a5b]/20 bg-[#1b1a18]/95 shadow-[0_8px_28px_rgba(0,0,0,0.22)] backdrop-blur"
-          : "sticky top-0 z-50 border-b border-transparent bg-[#1b1a18]/90 backdrop-blur"
+          ? "fixed inset-x-0 top-0 z-[100] border-b border-[#c88a5b]/20 bg-[#1b1a18]/95 shadow-[0_8px_28px_rgba(0,0,0,0.22)] backdrop-blur"
+          : "fixed inset-x-0 top-0 z-[100] border-b border-transparent bg-[#1b1a18]/90 backdrop-blur"
       }
     >
       <div

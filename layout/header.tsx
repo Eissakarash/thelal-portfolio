@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import SideBar from "./side-bar";
 import HeaderClient from "./header-client";
+import FloatingActions from "./floating-actions";
 
 async function Header({ lang }: { lang: "ar" | "en" }) {
   const t = await getTranslations("common");
@@ -18,7 +19,7 @@ async function Header({ lang }: { lang: "ar" | "en" }) {
     { id: "contact", label: t("contact"), featured: true },
   ];
   const socials = { instagram: values?.instagram, linkedin: values?.linkedin, x: values?.x, whatsapp: values?.whatsapp, mail: values?.mail };
-  return <><HeaderClient items={items} socials={socials} /><SideBar values={values} /></>;
+  return <><HeaderClient items={items} socials={socials} /><SideBar values={values} /><FloatingActions whatsapp={values?.whatsapp} /></>;
 }
 
 export default Header;
