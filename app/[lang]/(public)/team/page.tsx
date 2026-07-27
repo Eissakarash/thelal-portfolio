@@ -27,7 +27,7 @@ const TeamPage = async ({ params: { lang } }: { params: { lang: "ar" | "en" } })
 
   return (
     <main
-      className="min-h-screen bg-[#f3f0eb] pb-20 pt-12 md:pb-28 md:pt-20"
+      className="min-h-screen bg-[#f3f0eb] pb-20 pt-36 md:pb-28 md:pt-40"
       dir={lang === "ar" ? "rtl" : "ltr"}
     >
       <div className="mx-auto max-w-[1320px] px-5 md:px-10 lg:px-12">
